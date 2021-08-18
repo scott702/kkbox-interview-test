@@ -1,0 +1,19 @@
+/*
+ * Just work for chrome and edge
+ * Ref: https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-scrollbar
+ */
+ .scrollbar {
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background-color: lightgrey;
+  }
+}

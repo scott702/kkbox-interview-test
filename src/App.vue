@@ -8,6 +8,7 @@
 
 <style lang="scss" src="@/assets/styles/base.scss"></style>
 <style lang="scss" src="@/assets/styles/button.scss"></style>
+<style lang="scss" src="@/assets/styles/scrollbar.scss"></style>
 <style lang="scss" scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

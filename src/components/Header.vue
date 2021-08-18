@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="header-container">
     <div class="image">
       <img :src="image" alt="image"/>
     </div>
@@ -35,16 +35,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.header {
+.header-container {
   display: flex;
   flex-flow: row;
   height: 15vmin;
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  box-sizing: border-box;
-  padding: 8px;
-
+  margin-top: 8px;
+  margin-bottom: 24px;
   .image {
     height: 100%;
     margin-left: 8px;
@@ -61,8 +60,8 @@ export default {
     display: flex;
     align-items: flex-end;
     justify-content: left;
-    margin: 0 4px;
-
+    margin: 8px;
+    box-sizing: border-box;
     .title {
       line-height: 1;
     }
