@@ -1,0 +1,20 @@
+.btn {
+  user-select: none;
+
+  &:hover {
+    cursor: pointer;
+    background-color: lightgrey;
+    border-color: lightgrey;
+  }
+  &:active {
+    cursor: pointer;
+    background-color: gray;
+    border-color: gray;
+  }
+}
+
+.btn.btn-play {
+  border: 1px solid gray;
+  padding: 4px 8px;
+  border-radius: 10px;
+}
