@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="image">
-      <img :src="require('../assets/logo.png')" />
+      <img :src="image" alt="image"/>
     </div>
 
     <div class="middle">
@@ -20,7 +20,7 @@ export default {
   props: {
     image: {
       type: String,
-      default: '../assets/logo.png',
+      default: '',
     },
     title: {
       type: String,
