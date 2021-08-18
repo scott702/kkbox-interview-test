@@ -1,0 +1,81 @@
+<template>
+  <div class="header">
+    <div class="image">
+      <img :src="require('../assets/logo.png')" />
+    </div>
+
+    <div class="middle">
+      <div class="title">{{ title }}</div>
+    </div>
+
+    <div class="btn-section" v-if="playBtn">
+      <a class="btn btn-play" @click.prevent>{{ 'Play' }}</a>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'Header',
+  props: {
+    image: {
+      type: String,
+      default: '../assets/logo.png',
+    },
+    title: {
+      type: String,
+      default: 'Title',
+    },
+    playBtn: {
+      type: Boolean,
+      default: false,
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.header {
+  display: flex;
+  flex-flow: row;
+  height: 15vmin;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 8px;
+
+  .image {
+    height: 100%;
+    margin-left: 8px;
+    margin-right: 4px;
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+    }
+  }
+  .middle {
+    flex: auto;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: left;
+    margin: 0 4px;
+
+    .title {
+      line-height: 1;
+    }
+  }
+
+  .btn-section {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    flex-basis: 20%;
+    height: 100%;
+    margin-right: 8px;
+    margin-left: 4px;
+  }
+}
+</style>
