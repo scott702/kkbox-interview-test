@@ -4,9 +4,11 @@
       :title="channelInfo.title"
       :image="channelInfo.image"
     />
-    <EpisodeList
-      :items="episodesList"
-    />
+    <div class="body scrollbar">
+      <EpisodeList
+        :items="episodesList"
+      />
+    </div>
   </div>
 </template>
 
@@ -48,7 +50,6 @@ export default {
         return;
       }
 
-      console.log(res);
 
       this.channelInfo.title = res.title;
       this.channelInfo.image = res.image.url;
@@ -69,5 +70,11 @@ export default {
   display: flex;
   flex-flow: column;
   height: 100%;
+  .body {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    margin: 4px 0;
+  }
 }
 </style>

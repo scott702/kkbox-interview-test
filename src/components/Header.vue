@@ -38,29 +38,35 @@ export default {
 .header-container {
   display: flex;
   flex-flow: row;
-  height: 15vmin;
   width: 100%;
+  height: 210px;
   align-items: center;
   justify-content: space-between;
   margin-top: 8px;
   margin-bottom: 24px;
   .image {
-    height: 100%;
+    // height: 100%;
+    height: 210px;
     margin-left: 8px;
     margin-right: 4px;
     img {
-      height: 100%;
-      width: 100%;
-      object-fit: contain;
+      // height: 100%;
+      // width: 100%;
+      // object-fit: contain;
+      // display: block;
+      // max-width:230px;
+      // max-height:95px;
+      // width: auto;
+      // height: auto;
     }
   }
   .middle {
     flex: auto;
     height: 100%;
+    margin: 8px;
     display: flex;
     align-items: flex-end;
-    justify-content: left;
-    margin: 8px;
+    justify-content: flex-start;
     box-sizing: border-box;
     .title {
       line-height: 1;

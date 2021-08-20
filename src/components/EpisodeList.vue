@@ -1,5 +1,5 @@
 <template>
-  <div class="episode-list scrollbar">
+  <div class="episode-list">
     <EpisodeListItem
       v-for="(item) in items"
       :image="item.image"
@@ -42,9 +42,6 @@ export default {
 
 <style lang="scss" scoped>
 .episode-list {
-  width: 100%;
-  height: 100%;
-  overflow-y: scroll;
-  margin: 4px 0;
+  margin-right: 4px;
 }
 </style>
