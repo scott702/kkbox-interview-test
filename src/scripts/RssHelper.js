@@ -11,6 +11,7 @@ class RssHelper {
 
   getRss(rssId) {
     return this.parser.parseURL(`${RSS_ENDPOINT}/${rssId}.xml`);
+    // return this.parser.parseURL('https://feeds.soundon.fm/podcasts/954689a5-3096-43a4-a80b-7810b219cef3.xml');
   }
 
   static install(Vue) {

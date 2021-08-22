@@ -1,5 +1,10 @@
-.btn {
+a.btn {
   user-select: none;
+  text-transform: capitalize;
+  font-size: 1rem;
+  border: 1px solid gray;
+  padding: 4px 8px;
+  box-sizing: border-box;
 
   &:hover {
     cursor: pointer;
@@ -14,8 +19,16 @@
   }
 }
 
-.btn.btn-play {
-  border: 1px solid gray;
-  padding: 4px 8px;
+a.btn.btn-play {
   border-radius: 10px;
+  font-size: 1.5rem;
+}
+
+a.btn.btn-play-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

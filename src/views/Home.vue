@@ -31,6 +31,7 @@ export default {
         description: '',
       },
       episodesList: [],
+      isLoading: false,
     };
   },
   mounted() {
@@ -39,17 +40,21 @@ export default {
   methods: {
     ...mapActions('episode', ['fetchEpisodes']),
     async fetchData() {
+      this.isLoading = true;
+      const loader = this.$loading.show({
+        loader: 'dots',
+      });
       let res;
       try {
         res = await this.fetchEpisodes('954689a5-3096-43a4-a80b-7810b219cef3');
       } catch (err) {
         console.error(err);
       }
-
       if (!res) {
         return;
       }
-
+      this.isLoading = false;
+      loader.hide();
 
       this.channelInfo.title = res.title;
       this.channelInfo.image = res.image.url;
@@ -70,6 +75,7 @@ export default {
   display: flex;
   flex-flow: column;
   height: 100%;
+  width: 100%;
   .body {
     width: 100%;
     height: 100%;

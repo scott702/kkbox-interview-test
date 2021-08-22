@@ -1,7 +1,7 @@
 <template>
   <div class="header-container">
     <div class="image">
-      <img :src="image" alt="image"/>
+      <img :src="image" alt="image" v-if="!!image"/>
     </div>
 
     <div class="middle">
@@ -9,12 +9,20 @@
     </div>
 
     <div class="btn-section" v-if="playBtn">
-      <a class="btn btn-play" @click.prevent>{{ 'Play' }}</a>
+      <a
+        class="btn btn-play"
+        @click.prevent="handleClickPlayBtn"
+      >{{ playBtnText }}</a>
     </div>
   </div>
 </template>
 
 <script>
+import {
+  mapActions, mapGetters, mapMutations, mapState,
+} from 'vuex';
+import { PLAYER_STATE } from '@/scripts/constants';
+
 export default {
   name: 'Header',
   props: {
@@ -24,11 +32,49 @@ export default {
     },
     title: {
       type: String,
-      default: 'Title',
+      default: '',
     },
     playBtn: {
       type: Boolean,
       default: false,
+    },
+  },
+  computed: {
+    ...mapState('episode', ['currEpisodeId']),
+    ...mapGetters('episode', ['currEpisode']),
+    ...mapState('player', ['playingData', 'playerState']),
+    playingId() {
+      if (!this.playingData || Object.keys(this.playingData).length < 1) {
+        return '';
+      }
+
+      return this.playingData.guid;
+    },
+    isCurrEpisodePlaying() {
+      return this.playingId === this.currEpisodeId;
+    },
+    playBtnText() {
+      if (this.playerState === PLAYER_STATE.PLAY && this.isCurrEpisodePlaying) {
+        return PLAYER_STATE.PAUSE;
+      }
+      return PLAYER_STATE.PLAY;
+    },
+  },
+  methods: {
+    ...mapActions('player', ['handlePlayState', 'handlePauseState', 'togglePlayerState']),
+    ...mapMutations('player', ['setPlayingData', 'resetPlayerState']),
+    handleClickPlayBtn() {
+      console.log('');
+      console.log('[Header][handleClickPlayBtn]');
+      console.log(1);
+      if (this.isCurrEpisodePlaying) {
+        this.togglePlayerState();
+        return;
+      }
+
+      this.resetPlayerState();
+      this.setPlayingData(this.currEpisode);
+      console.log(4);
     },
   },
 };
@@ -43,22 +89,12 @@ export default {
   align-items: center;
   justify-content: space-between;
   margin-top: 8px;
-  margin-bottom: 24px;
+  margin-bottom: 60px;
+
   .image {
-    // height: 100%;
     height: 210px;
     margin-left: 8px;
     margin-right: 4px;
-    img {
-      // height: 100%;
-      // width: 100%;
-      // object-fit: contain;
-      // display: block;
-      // max-width:230px;
-      // max-height:95px;
-      // width: auto;
-      // height: auto;
-    }
   }
   .middle {
     flex: auto;

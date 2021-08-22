@@ -1,22 +1,25 @@
 <template>
   <div class="container">
     <Header
-      :title="currEpisode.title"
-      :image="currEpisode.image"
+      :title="currEpisode.title || ''"
+      :image="episodeImage"
       playBtn
     />
     <div
       class="description-body scrollbar"
     >
       <EpisodeDescription
-        :description="currEpisode.description"
+        v-show="episodeDescription"
+        :description="episodeDescription"
       />
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import {
+  mapActions, mapGetters, mapMutations, mapState,
+} from 'vuex';
 import Header from '@/components/Header.vue';
 import EpisodeDescription from '@/components/EpisodeDescription.vue';
 
@@ -30,38 +33,37 @@ export default {
     return {};
   },
   computed: {
-    ...mapState('episode', ['episodes']),
-    episodeId() {
-      console.log('[Episode][computed]', this.$route.params.id);
-      if (!this.$route.params) {
-        return this.episodes[0].guid || '';
+    ...mapState('episode', ['episodes', 'currEpisodeId']),
+    ...mapGetters('episode', ['currEpisode']),
+    episodeImage() {
+      if (!this.currEpisode.itunes) {
+        return '';
       }
 
-      return this.$route.params.id;
+      return this.currEpisode.itunes.image || '';
     },
-    currEpisode() {
-      const episode = this.episodes.find((ep) => ep.guid === this.episodeId);
-      console.log('[Episode][currEpisode] episode: ', episode);
-      if (!episode) {
-        return {};
-      }
-      return {
-        title: episode.title,
-        image: episode.itunes.image,
-        description: episode['content:encoded'],
-      };
+
+    episodeDescription() {
+      return this.currEpisode['content:encoded'] || '';
     },
   },
   mounted() {
-    console.log('[Episode][mounted]', this.episodeId);
-    if (this.episodes.length < 1) {
-      this.fetchEpisodes('954689a5-3096-43a4-a80b-7810b219cef3');
-    }
+    console.log('[Episode][mounted]', this.currEpisodeId);
+    this.fetchData();
   },
   methods: {
+    ...mapMutations('episode', ['setCurrEpisodeId']),
     ...mapActions('episode', ['fetchEpisodes']),
-    fetchData() {
-
+    async fetchData() {
+      const loader = this.$loading.show({
+        loader: 'dots',
+      });
+      if (this.episodes.length < 1) {
+        await this.fetchEpisodes('954689a5-3096-43a4-a80b-7810b219cef3');
+      }
+      const { id } = this.$route.params;
+      this.setCurrEpisodeId(id);
+      loader.hide();
     },
   },
 };
@@ -72,6 +74,7 @@ export default {
   display: flex;
   flex-flow: column;
   height: 100%;
+  width: 100%;
 
   .description-body {
     height: 100%;

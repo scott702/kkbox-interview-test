@@ -3,8 +3,27 @@
     <div class="main">
       <router-view/>
     </div>
+    <EpisodePlayer v-show="showPlayer"/>
   </div>
 </template>
+
+<script>
+import { mapState } from 'vuex';
+import EpisodePlayer from '@/components/EpisodePlayer.vue';
+
+export default {
+  name: 'App',
+  components: {
+    EpisodePlayer,
+  },
+  computed: {
+    ...mapState('player', ['playingData']),
+    showPlayer() {
+      return Object.keys(this.playingData).length > 0;
+    },
+  },
+};
+</script>
 
 <style lang="scss" src="@/assets/styles/base.scss"></style>
 <style lang="scss" src="@/assets/styles/button.scss"></style>
@@ -19,14 +38,30 @@
   background-color: #2c3e50;
   width: 100%;
   height: 100%;
-  display: flex;
+  // display: flex;
   align-items: center;
   justify-content: center;
+  // width: 80vmin;
+  // height: 90vh;
+  // height: 100%;
+  // border: 1px solid lightgrey;
+  display: flex;
+  flex-flow: column;
+  // flex: 1 1 auto;
+  overflow: hidden;
   .main {
-    width: 50vmin;
-    height: 90vh;
-    border: 1px solid lightgrey;
     padding: 8px;
+    width: 80vw;
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
+
+    // .player-section {
+    //   flex-basis: 5vmin;
+    // }
 }
 </style>

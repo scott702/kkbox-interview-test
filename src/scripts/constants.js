@@ -4,3 +4,8 @@ console.log(process.env);
 export const {
   VUE_APP_RSS_ENDPOINT: RSS_ENDPOINT,
 } = process.env;
+
+export const PLAYER_STATE = {
+  PLAY: 'play',
+  PAUSE: 'pause',
+};
