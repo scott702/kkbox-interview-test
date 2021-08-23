@@ -5,7 +5,7 @@
     </div>
     <div class="episode-body">
       <div class="episode-title">{{ title }}</div>
-      <div class="episode-publish-date">{{ publishDate }}</div>
+      <div class="episode-publish-date">{{ localDate }} · {{ duration }}</div>
     </div>
   </div>
 </template>
@@ -26,9 +26,22 @@ export default {
       type: String,
       default: '',
     },
+    duration: {
+      type: String,
+      default: '',
+    },
     episodeId: {
       type: String,
       required: true,
+    },
+  },
+  computed: {
+    localDate() {
+      if (!this.publishDate) {
+        return '';
+      }
+
+      return new Date(this.publishDate).toLocaleDateString();
     },
   },
 };
@@ -41,7 +54,7 @@ export default {
   margin: 8px 0;
   border-radius: 10px;
   padding: 8px;
-
+  align-items: center;
   &:hover {
     cursor: pointer;
     background-color: lightgray;

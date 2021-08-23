@@ -1,7 +1,7 @@
 <template>
   <div class="description-content">
     <div class="title">Episode Description</div>
-    <div class="descriotion" v-html="description">{{ description }}</div>
+    <div class="descriotion scrollbar" v-html="description">{{ description }}</div>
   </div>
 </template>
 
@@ -19,7 +19,6 @@ export default {
 
 <style lang="scss" scoped>
 .description-content {
-  margin: 0 8px;
   text-align: left;
 }
 </style>

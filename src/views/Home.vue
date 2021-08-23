@@ -3,12 +3,12 @@
     <Header
       :title="channelInfo.title"
       :image="channelInfo.image"
+      :subtitle="channelInfo.author"
     />
-    <div class="body scrollbar">
-      <EpisodeList
-        :items="episodesList"
-      />
-    </div>
+    <EpisodeList
+      class="content"
+      :items="episodesList"
+    />
   </div>
 </template>
 
@@ -28,7 +28,7 @@ export default {
       channelInfo: {
         name: '',
         image: '',
-        description: '',
+        author: '',
       },
       episodesList: [],
       isLoading: false,
@@ -58,11 +58,12 @@ export default {
 
       this.channelInfo.title = res.title;
       this.channelInfo.image = res.image.url;
-      this.channelInfo.description = res.description;
+      this.channelInfo.author = res.itunes.author;
       this.episodesList = res.items.map((item) => ({
         title: item.title,
         image: item.itunes.image,
         publishDate: item.isoDate,
+        duration: item.itunes.duration,
         id: item.guid,
       }));
     },
@@ -72,15 +73,8 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-  display: flex;
-  flex-flow: column;
-  height: 100%;
-  width: 100%;
-  .body {
-    width: 100%;
-    height: 100%;
-    overflow-y: scroll;
-    margin: 4px 0;
+  .title {
+    margin: 0 8px;
   }
 }
 </style>

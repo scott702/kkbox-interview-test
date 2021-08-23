@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <div class="main">
+      <Navbar />
       <router-view/>
     </div>
     <EpisodePlayer v-show="showPlayer"/>
@@ -10,10 +11,12 @@
 <script>
 import { mapState } from 'vuex';
 import EpisodePlayer from '@/components/EpisodePlayer.vue';
+import Navbar from '@/components/Navbar.vue';
 
 export default {
   name: 'App',
   components: {
+    Navbar,
     EpisodePlayer,
   },
   computed: {
@@ -25,43 +28,36 @@ export default {
 };
 </script>
 
-<style lang="scss" src="@/assets/styles/base.scss"></style>
-<style lang="scss" src="@/assets/styles/button.scss"></style>
-<style lang="scss" src="@/assets/styles/scrollbar.scss"></style>
+<style lang="scss" src="@sty/base.scss"></style>
+<style lang="scss" src="@sty/scrollbar.scss"></style>
 <style lang="scss" scoped>
+@import '@sty/color.scss';
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: lightgrey;
-  background-color: #2c3e50;
+  color: $text;
+  background-color: $primary;
   width: 100%;
   height: 100%;
-  // display: flex;
   align-items: center;
   justify-content: center;
-  // width: 80vmin;
-  // height: 90vh;
-  // height: 100%;
-  // border: 1px solid lightgrey;
   display: flex;
   flex-flow: column;
-  // flex: 1 1 auto;
   overflow: hidden;
+
   .main {
     padding: 8px;
     width: 80vw;
     box-sizing: border-box;
-    flex: 1 1 auto;
     height: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-flow: column;
+    flex: 1 1 auto;
   }
-
-    // .player-section {
-    //   flex-basis: 5vmin;
-    // }
 }
 </style>

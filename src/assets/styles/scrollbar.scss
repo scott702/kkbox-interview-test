@@ -2,7 +2,10 @@
  * Just work for chrome and edge
  * Ref: https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-scrollbar
  */
- .scrollbar {
+.scrollbar {
+   overflow-y: auto;
+   padding-right: 4px;
+
   &::-webkit-scrollbar-track {
     background-color: transparent;
   }

@@ -1,12 +1,11 @@
+@import '@sty/color.scss';
+
 body {
   height: 100vh;
   margin: auto;
 }
 
 img {
-  // height: 100%;
-  // width: 100%;
-  // object-fit: contain;
   height: 100%;
   aspect-ratio: 1 / 1;
   object-fit: contain;
@@ -15,5 +14,36 @@ img {
 .title {
   font-size: 2rem;
   text-align: left;
+  font-weight: bold;
+  margin-bottom: 12px
 }
 
+.subtitle {
+  font-size: 1.3rem;
+}
+
+p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+a[href] {
+  color: $highlight;
+  text-decoration: none;
+}
+
+.container {
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+  flex: 1 1 auto;
+  height: 0;
+
+  .content {
+    margin: 0 8px;
+    display: flex;
+    flex-flow: column;
+    flex: 1;
+    height: 0;
+  }
+}

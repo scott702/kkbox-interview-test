@@ -1,18 +1,20 @@
 <template>
   <div class="container">
     <Header
-      :title="currEpisode.title || ''"
+      :title="currEpisode.title"
+      :subtitle="episodeName"
       :image="episodeImage"
       playBtn
-    />
-    <div
-      class="description-body scrollbar"
     >
-      <EpisodeDescription
-        v-show="episodeDescription"
-        :description="episodeDescription"
-      />
-    </div>
+      <Button
+        @click="handleClickPlayBtn"
+      >{{ playBtnText }}</Button>
+    </Header>
+
+    <EpisodeDescription
+      class="content"
+      :description="episodeDescription"
+    />
   </div>
 </template>
 
@@ -22,19 +24,29 @@ import {
 } from 'vuex';
 import Header from '@/components/Header.vue';
 import EpisodeDescription from '@/components/EpisodeDescription.vue';
+import { PLAYER_STATE } from '@/scripts/constants';
+import Button from '@/components/widget/Button.vue';
 
 export default {
   name: 'Episode',
   components: {
     Header,
+    Button,
     EpisodeDescription,
   },
   data() {
     return {};
   },
   computed: {
-    ...mapState('episode', ['episodes', 'currEpisodeId']),
+    ...mapState('episode', ['episodes', 'currEpisodeId', 'episodeName']),
+    ...mapState('player', ['playerState', 'playingData']),
     ...mapGetters('episode', ['currEpisode']),
+    routeId() {
+      if (!this.$route.params) {
+        return '';
+      }
+      return this.$route.params.id;
+    },
     episodeImage() {
       if (!this.currEpisode.itunes) {
         return '';
@@ -42,28 +54,61 @@ export default {
 
       return this.currEpisode.itunes.image || '';
     },
-
     episodeDescription() {
       return this.currEpisode['content:encoded'] || '';
     },
+    playingId() {
+      if (!this.playingData || Object.keys(this.playingData).length < 1) {
+        return '';
+      }
+
+      return this.playingData.guid;
+    },
+    isCurrEpisodePlaying() {
+      return this.playingId === this.currEpisodeId;
+    },
+    playBtnText() {
+      if (this.playerState === PLAYER_STATE.PLAY && this.isCurrEpisodePlaying) {
+        return PLAYER_STATE.PAUSE;
+      }
+      return PLAYER_STATE.PLAY;
+    },
   },
   mounted() {
-    console.log('[Episode][mounted]', this.currEpisodeId);
-    this.fetchData();
+    const { id } = this.$route.params;
+    this.fetchData(id);
+  },
+  watch: {
+    routeId(id) {
+      this.fetchData(id);
+    },
   },
   methods: {
     ...mapMutations('episode', ['setCurrEpisodeId']),
+    ...mapMutations('player', ['setPlayingData', 'resetPlayerState']),
     ...mapActions('episode', ['fetchEpisodes']),
-    async fetchData() {
-      const loader = this.$loading.show({
-        loader: 'dots',
-      });
+    ...mapActions('player', ['togglePlayerState']),
+    async fetchData(id) {
+      let loader;
       if (this.episodes.length < 1) {
+        loader = this.$loading.show({
+          loader: 'dots',
+        });
         await this.fetchEpisodes('954689a5-3096-43a4-a80b-7810b219cef3');
       }
-      const { id } = this.$route.params;
       this.setCurrEpisodeId(id);
-      loader.hide();
+      if (loader) {
+        loader.hide();
+      }
+    },
+    handleClickPlayBtn() {
+      if (this.isCurrEpisodePlaying) {
+        this.togglePlayerState();
+        return;
+      }
+
+      this.resetPlayerState();
+      this.setPlayingData(this.currEpisode);
     },
   },
 };
@@ -71,11 +116,6 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-  display: flex;
-  flex-flow: column;
-  height: 100%;
-  width: 100%;
-
   .description-body {
     height: 100%;
     overflow: auto;

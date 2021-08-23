@@ -1,21 +1,26 @@
+@import '@sty/color.scss';
+
 a.btn {
   user-select: none;
   text-transform: capitalize;
   font-size: 1rem;
-  border: 1px solid gray;
+  border: 1px solid $active;
   padding: 4px 8px;
   box-sizing: border-box;
+  cursor: pointer;
+
+  &.disabled {
+    cursor: not-allowed;
+  }
 
   &:hover {
-    cursor: pointer;
-    background-color: lightgrey;
-    border-color: lightgrey;
-    color: #2c3e50;
+    background-color: $text;
+    border-color: $text;
+    color: $primary;
   }
   &:active {
-    cursor: pointer;
-    background-color: gray;
-    border-color: gray;
+    background-color: $active;
+    border-color: $active;
   }
 }
 

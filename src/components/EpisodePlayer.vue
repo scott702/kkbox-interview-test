@@ -3,6 +3,9 @@
     <div class="seek-bar">
       <vue-slider
         :max="playDuration"
+        :processStyle="seekbarSty.process"
+        :dotStyle="seekbarSty.dot"
+        height="6px"
         tooltip="none"
         v-model="seekValue"
         @change="handleSeekChange"
@@ -24,18 +27,33 @@
     </div>
     <div class="info">
       <div class="btn-section">
-        <a class="btn btn-play-circle" @click="togglePlayerState">
-          <span>
-            <font-awesome-icon :icon="['fas', 'spinner']" v-if="isLoading" />
-            <font-awesome-icon
-              :icon="['fas', 'pause']"
-              v-else-if="playerState === PLAYER_STATE.PLAY"
-            />
-            <font-awesome-icon :icon="['fas', 'play']" v-else />
-          </span>
-        </a>
+        <Button
+          circle
+          :disabled="isLoading"
+          @click="togglePlayerState"
+        >
+          <font-awesome-icon
+            class="buffer-loading"
+            icon="spinner" v-if="isLoading"
+          />
+          <font-awesome-icon
+            icon="pause"
+            v-else-if="playerState === PLAYER_STATE.PLAY"
+          />
+          <font-awesome-icon icon="play" v-else />
+        </Button>
       </div>
-      <div class="playing-info">Now playing {{ episodeTitle }}</div>
+      <div class="playing-info">Now playing
+        <router-link
+          class="episode-title"
+          :to="{
+            name: ROUTE_NAME.EPISODE,
+            params: {
+              id: playingData.guid,
+            }
+          }"
+        >{{ episodeTitle }}</router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -45,7 +63,10 @@ import {
   mapGetters, mapState, mapActions, mapMutations,
 } from 'vuex';
 import VueSlider from 'vue-slider-component';
-import { PLAYER_STATE } from '@/scripts/constants';
+// eslint-disable-next-line import/no-unresolved
+import colors from '@sty/color.scss';
+import Button from '@widget/Button.vue';
+import { PLAYER_STATE, ROUTE_NAME } from '@/scripts/constants';
 
 import 'vue-slider-component/theme/default.css';
 
@@ -53,11 +74,12 @@ export default {
   name: 'EpisodePlayer',
   components: {
     VueSlider,
+    Button,
   },
   computed: {
     ...mapState('episode', ['episodes', 'currEpisodeId']),
     ...mapState('player', ['playerState', 'playingData']),
-    ...mapGetters('episode', ['currEpisode']),
+    ...mapGetters('episode', ['currEpisode', 'prevNextEpisodeIds']),
     audioLink() {
       if (Object.keys(this.playingData).length < 1) {
         return '';
@@ -83,9 +105,18 @@ export default {
   data() {
     return {
       PLAYER_STATE,
+      ROUTE_NAME,
       seekValue: 0,
       isBuffered: true,
       isLoading: false,
+      seekbarSty: {
+        process: {
+          background: colors.highlightColor,
+        },
+        dot: {
+          background: colors.highlightColor,
+        },
+      },
     };
   },
   watch: {
@@ -95,7 +126,7 @@ export default {
       }
     },
     playingData() {
-      this.isLoading = true;
+      this.$set(this, 'isLoading', true);
       this.handlePlayNew();
     },
   },
@@ -113,15 +144,15 @@ export default {
       }
     },
     onSuspended() {
-      this.isLoading = true;
+      this.$set(this, 'isLoading', true);
     },
     onPlay() {
-      this.isLoading = false;
+      this.$set(this, 'isLoading', false);
       this.handlePlayState();
     },
     onPause() {
       if (this.$refs.audio.buffered.length > 0) {
-        this.isLoading = false;
+        this.$set(this, 'isLoading', false);
         this.handlePauseState();
       }
     },
@@ -129,29 +160,32 @@ export default {
       this.handlePlayState();
     },
     onAudioTimeUpdate(e) {
-      if (this.isLoading) {
-        this.isLoading = false;
-      }
       this.seekValue = e.target.currentTime;
     },
     onAudioProgress() {
-      this.isLoading = true;
       const isBuffered = this.checkBuffered();
       const isPasued = this.$refs.audio.paused;
       if ((isPasued && isBuffered) || this.$refs.audio.buffered.length === 0) {
-        this.isLoading = false;
+        this.$set(this, 'isLoading', false);
         this.handlePlayState();
-      }
-
-      if (this.$refs.audio.readyState !== 0) {
-        this.isLoading = false;
       }
     },
     checkBuffered() {
-      const { buffered } = this.$refs.audio;
+      const { buffered, readyState, currentTime } = this.$refs.audio;
       const { length } = buffered;
+      this.$set(this, 'isLoading', true);
+      const isReady = readyState === 4;
+
+      if (isReady) {
+        this.$set(this, 'isLoading', false);
+        return true;
+      }
       for (let i = 0; i < length; i += 1) {
-        if (buffered.start(i) < this.seekValue && buffered.end(i) > this.seekValue) {
+        if (
+          (buffered.start(i) < currentTime
+          && buffered.end(i) > currentTime)
+        ) {
+          this.$set(this, 'isLoading', false);
           return true;
         }
       }
@@ -179,20 +213,22 @@ export default {
       this.handlePlayToNext();
     },
     handlePlayToNext() {
-      const { guid } = this.playingData;
-      const index = this.episodes.findIndex((ep) => ep.guid === guid);
-      this.resetPlayerState();
+      const { next } = this.prevNextEpisodeIds;
 
-      if (index + 1 < this.episodes.length) {
-        this.setPlayingData(this.episodes[index + 1]);
+      if (next) {
+        this.resetPlayerState();
+        const episode = this.episodes.find((ep) => ep.guid === next);
+        this.setPlayingData(episode);
+        return;
       }
+      this.setPlayingData({});
     },
     handlePlayAudio() {
       if (!this.$refs.audio.paused) {
         return;
       }
       this.$refs.audio.play().then(() => {
-        this.isLoading = false;
+        this.$set(this, 'isLoading', false);
       });
     },
     handlePauseAudio() {
@@ -231,7 +267,6 @@ export default {
 
 <style lang="scss" scoped>
 .player-container {
-  // border: 3px solid black;
   box-sizing: border-box;
   width: 100%;
   height: 5vmin;
@@ -239,6 +274,11 @@ export default {
   flex-flow: column;
   position: relative;
   margin-top: 10px;
+
+  .episode-title {
+    font-weight: bold;
+  }
+
   .seek-bar {
     width: 100%;
     position: absolute;
@@ -262,6 +302,22 @@ export default {
       flex: 1 1 auto;
       text-align: left;
     }
+  }
+}
+</style>
+<style lang="scss">
+.buffer-loading {
+  animation-name: loading;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+@keyframes loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 </style>
