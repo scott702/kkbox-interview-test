@@ -9,7 +9,6 @@
       <Button
         @click="handleClickPlayBtn"
       >{{ playBtnText }}</Button>
-      <!-- <a-button @click="handleClickPlayBtn">{{ playBtnText }}</a-button> -->
     </Header>
 
     <EpisodeDescription

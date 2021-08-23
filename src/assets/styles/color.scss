@@ -3,11 +3,3 @@ $secondary: #325373;
 $text: lightgrey;
 $active: gray;
 $highlight: #86c2ff;
-
-:export {
-  primaryColor: $primary;
-  secondaryColor: $secondary;
-  highlightColor: $highlight;
-  textColor: $text;
-  activeColor: $active;
-}

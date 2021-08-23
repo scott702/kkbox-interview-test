@@ -71,7 +71,6 @@ export default {
   }
 
   .episode-image {
-    // width: 5vmin;
     height: 5vmin;
     margin-left: 8px;
     margin-right: 4px;

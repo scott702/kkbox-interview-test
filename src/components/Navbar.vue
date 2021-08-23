@@ -66,9 +66,6 @@ export default {
     },
   },
   methods: {
-    console(x) {
-      console.log(x);
-    },
     toNextEpisode() {
       this.$router.push({
         params: {
