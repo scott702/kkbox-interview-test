@@ -6,28 +6,16 @@ import { ROUTE_NAME } from '@/scripts/constants';
 
 Vue.use(VueRouter);
 
-const routes = [
+export const routes = [
   {
     path: '/',
     name: ROUTE_NAME.HOME,
     component: Home,
-    meta: {
-      breadcrumb: ROUTE_NAME.HOME,
-    },
   },
   {
     path: '/episode/:id',
     name: ROUTE_NAME.EPISODE,
     component: Episode,
-    meta: {
-      breadcrumb() {
-        const { name } = this.$route;
-        return {
-          label: name,
-          parent: ROUTE_NAME.HOME,
-        };
-      },
-    },
   },
 ];
 

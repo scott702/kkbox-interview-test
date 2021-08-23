@@ -13,32 +13,26 @@ export default {
     setPlayerState(state, playerState) {
       state.playerState = playerState;
     },
+    setPlayerStateToPlay(state) {
+      state.playerState = PLAYER_STATE.PLAY;
+    },
+    setPlayerStateToPause(state) {
+      state.playerState = PLAYER_STATE.PAUSE;
+    },
     setPlayingData(state, playingData) {
       state.playingData = playingData;
     },
     resetPlayerState(state) {
-      // state.isPlying = false;
-      // state.playerState = null;
       Object.assign(state, defaultState());
     },
   },
   actions: {
-    // handleNewPlay({ commit, dispatch }, data) {
-    //   commit('setPlayingData', data);
-    //   dispatch('handlePlay');
-    // },
-    handlePlayState({ commit }) {
-      commit('setPlayerState', PLAYER_STATE.PLAY);
-    },
-    handlePauseState({ commit }) {
-      commit('setPlayerState', PLAYER_STATE.PAUSE);
-    },
     togglePlayerState({ commit, state }) {
       if (state.playerState === PLAYER_STATE.PLAY) {
-        commit('setPlayerState', PLAYER_STATE.PAUSE);
+        commit('setPlayerStateToPause');
         return;
       }
-      commit('setPlayerState', PLAYER_STATE.PLAY);
+      commit('setPlayerStateToPlay');
     },
   },
 };

@@ -9,6 +9,7 @@
       <Button
         @click="handleClickPlayBtn"
       >{{ playBtnText }}</Button>
+      <!-- <a-button @click="handleClickPlayBtn">{{ playBtnText }}</a-button> -->
     </Header>
 
     <EpisodeDescription
@@ -22,10 +23,10 @@
 import {
   mapActions, mapGetters, mapMutations, mapState,
 } from 'vuex';
+import Button from '@widget/Button.vue';
 import Header from '@/components/Header.vue';
 import EpisodeDescription from '@/components/EpisodeDescription.vue';
 import { PLAYER_STATE } from '@/scripts/constants';
-import Button from '@/components/widget/Button.vue';
 
 export default {
   name: 'Episode',

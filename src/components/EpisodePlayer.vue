@@ -1,16 +1,15 @@
 <template>
   <div class="player-container">
     <div class="seek-bar">
-      <vue-slider
+      <a-slider
+        :defaultValue="0"
         :max="playDuration"
-        :processStyle="seekbarSty.process"
-        :dotStyle="seekbarSty.dot"
-        height="6px"
+        :tooltipVisible="false"
         tooltip="none"
         v-model="seekValue"
         @change="handleSeekChange"
-        @input="handleSeekInput"
-      ></vue-slider>
+        @afterChange="handleSeekInput"
+      />
       <audio
         ref="audio"
         @ended="onAudioEnd"
@@ -45,11 +44,12 @@
       </div>
       <div class="playing-info">Now playing
         <router-link
+          v-if="playingData.guid"
           class="episode-title"
           :to="{
             name: ROUTE_NAME.EPISODE,
             params: {
-              id: playingData.guid,
+              id: playingData.guid || '',
             }
           }"
         >{{ episodeTitle }}</router-link>
@@ -62,18 +62,13 @@
 import {
   mapGetters, mapState, mapActions, mapMutations,
 } from 'vuex';
-import VueSlider from 'vue-slider-component';
-// eslint-disable-next-line import/no-unresolved
 import colors from '@sty/color.scss';
 import Button from '@widget/Button.vue';
 import { PLAYER_STATE, ROUTE_NAME } from '@/scripts/constants';
 
-import 'vue-slider-component/theme/default.css';
-
 export default {
   name: 'EpisodePlayer',
   components: {
-    VueSlider,
     Button,
   },
   computed: {
@@ -131,15 +126,20 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('player', ['resetPlayerState', 'setPlayingData']),
-    ...mapActions('player', ['handlePlayState', 'handlePauseState', 'togglePlayerState']),
+    ...mapMutations('player', [
+      'setPlayerStateToPlay',
+      'setPlayerStateToPause',
+      'resetPlayerState',
+      'setPlayingData',
+    ]),
+    ...mapActions('player', ['togglePlayerState']),
     handlePlayNew() {
       this.handleResetAudioPlayer();
 
       if (Object.keys(this.playingData).length > 0) {
         this.$nextTick(() => {
           this.$refs.audio.load();
-          this.handlePlayState();
+          this.setPlayerStateToPlay();
         });
       }
     },
@@ -148,16 +148,16 @@ export default {
     },
     onPlay() {
       this.$set(this, 'isLoading', false);
-      this.handlePlayState();
+      this.setPlayerStateToPlay();
     },
     onPause() {
       if (this.$refs.audio.buffered.length > 0) {
         this.$set(this, 'isLoading', false);
-        this.handlePauseState();
+        this.setPlayerStateToPause();
       }
     },
     onLoadeddata() {
-      this.handlePlayState();
+      this.setPlayerStateToPlay();
     },
     onAudioTimeUpdate(e) {
       this.seekValue = e.target.currentTime;
@@ -167,7 +167,7 @@ export default {
       const isPasued = this.$refs.audio.paused;
       if ((isPasued && isBuffered) || this.$refs.audio.buffered.length === 0) {
         this.$set(this, 'isLoading', false);
-        this.handlePlayState();
+        this.setPlayerStateToPlay();
       }
     },
     checkBuffered() {
@@ -266,6 +266,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@sty/color.scss';
+
 .player-container {
   box-sizing: border-box;
   width: 100%;
@@ -279,11 +281,21 @@ export default {
     font-weight: bold;
   }
 
-  .seek-bar {
+  .seek-bar::v-deep {
     width: 100%;
     position: absolute;
     transform: translate(0, -60%);
     margin: 0;
+    .ant-slider {
+      margin-right: 0;
+      margin-left: 0;
+    }
+    .ant-slider-track {
+      background-color: $highlight;
+    }
+    .ant-slider-handle {
+      background-color: $highlight;
+    }
   }
 
   .info {
@@ -292,6 +304,7 @@ export default {
     flex-flow: row;
     align-items: center;
     flex: 1 1 auto;
+    font-size: 1.1rem;
 
     .btn-section {
       margin: 0 20px;

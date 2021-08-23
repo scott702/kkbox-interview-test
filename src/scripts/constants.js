@@ -11,3 +11,8 @@ export const PLAYER_STATE = {
   PLAY: 'play',
   PAUSE: 'pause',
 };
+
+export const BREADCRUMB_CONFIG = {
+  [ROUTE_NAME.EPISODE]: [ROUTE_NAME.EPISODE, ROUTE_NAME.HOME],
+  [ROUTE_NAME.HOME]: [ROUTE_NAME.HOME],
+};

@@ -1,6 +1,15 @@
 <template>
   <nav class="navbar">
-    <Breadcrumbs class="row"/>
+    <a-breadcrumb :routes="currRoutes">
+      <template slot="itemRender" slot-scope="{ route, routes }">
+        <span v-if="routes.indexOf(route) === routes.length - 1">
+          {{ route.name }}
+        </span>
+        <router-link v-else :to="{ name: route.name }">
+          {{ route.name }}
+        </router-link>
+      </template>
+    </a-breadcrumb>
 
     <div class="row right-breadcrumbs" v-if="isEpisode">
       <router-link
@@ -8,7 +17,7 @@
         class="prev-episode"
         :to="{
           params: {
-            id: prevNextEpisodeIds.prev,
+            id: prevNextEpisodeIds.prev ,
           },
         }"
       >&#60; Previous Episode</router-link>
@@ -31,13 +40,15 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { ROUTE_NAME } from '@/scripts/constants';
+import { ROUTE_NAME, BREADCRUMB_CONFIG } from '@/scripts/constants';
+import { routes } from '@/router';
 
 export default {
   name: 'Navbar',
   data() {
     return {
       ROUTE_NAME,
+      routes,
     };
   },
   computed: {
@@ -45,8 +56,19 @@ export default {
     isEpisode() {
       return this.$route.name === ROUTE_NAME.EPISODE;
     },
+    currRoutes() {
+      const { name } = this.$route;
+      const breadcrumbs = BREADCRUMB_CONFIG[name].map(
+        (na) => (routes.find((ro) => ro.name === na)),
+      );
+
+      return breadcrumbs.reverse();
+    },
   },
   methods: {
+    console(x) {
+      console.log(x);
+    },
     toNextEpisode() {
       this.$router.push({
         params: {
@@ -66,11 +88,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.navbar {
+@import '@sty/color.scss';
+
+nav.navbar {
   width: 100%;
   display: flex;
   flex-flow: row;
-  justify-content: space-around;
+  justify-content: space-between;
 
   .row {
     display: flex;
@@ -86,7 +110,8 @@ export default {
     justify-content: flex-end;
   }
 
-  ol.breadcrumb, .right-breadcrumbs  {
+  .right-breadcrumbs,
+  .ant-breadcrumb {
     list-style: none;
     list-style-type: none;
     font-size: 1.2rem;
@@ -99,6 +124,18 @@ export default {
     li.breadcrumb-item+li.breadcrumb-item::before {
       font-weight: bold;
       content: "/";
+    }
+  }
+}
+
+nav.navbar .ant-breadcrumb::v-deep {
+  color: $text;
+  span.ant-breadcrumb-link,
+  span.ant-breadcrumb-separator {
+    color: $text;
+
+    a {
+      color: $highlight;
     }
   }
 }
