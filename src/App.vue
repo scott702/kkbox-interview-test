@@ -2,7 +2,7 @@
   <div id="app">
     <div class="main">
       <Navbar />
-      <router-view/>
+      <router-view :rssId="rssId"/>
     </div>
     <EpisodePlayer v-show="showPlayer"/>
   </div>
@@ -18,6 +18,11 @@ export default {
   components: {
     Navbar,
     EpisodePlayer,
+  },
+  data() {
+    return {
+      rssId: '954689a5-3096-43a4-a80b-7810b219cef3',
+    };
   },
   computed: {
     ...mapState('player', ['playingData']),

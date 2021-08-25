@@ -34,6 +34,12 @@ export default {
     Button,
     EpisodeDescription,
   },
+  props: {
+    rssId: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {};
   },
@@ -42,9 +48,6 @@ export default {
     ...mapState('player', ['playerState', 'playingData']),
     ...mapGetters('episode', ['currEpisode']),
     routeId() {
-      if (!this.$route.params) {
-        return '';
-      }
       return this.$route.params.id;
     },
     episodeImage() {
@@ -58,7 +61,9 @@ export default {
       return this.currEpisode['content:encoded'] || '';
     },
     playingId() {
-      if (!this.playingData || Object.keys(this.playingData).length < 1) {
+      if (!this.playingData
+        || Object.keys(this.playingData).length < 1
+        || !this.playingData.guid) {
         return '';
       }
 
@@ -76,11 +81,14 @@ export default {
   },
   mounted() {
     const { id } = this.$route.params;
-    this.fetchData(id);
+    this.init(id);
   },
   watch: {
     routeId(id) {
-      this.fetchData(id);
+      if (!id) {
+        return;
+      }
+      this.init(id);
     },
   },
   methods: {
@@ -88,18 +96,28 @@ export default {
     ...mapMutations('player', ['setPlayingData', 'resetPlayerState']),
     ...mapActions('episode', ['fetchEpisodes']),
     ...mapActions('player', ['togglePlayerState']),
-    async fetchData(id) {
-      let loader;
-      if (this.episodes.length < 1) {
-        loader = this.$loading.show({
-          loader: 'dots',
-        });
-        await this.fetchEpisodes('954689a5-3096-43a4-a80b-7810b219cef3');
+    async init(id) {
+      if (this.episodes.length > 0) {
+        this.setCurrEpisodeId(id);
+        return;
+      }
+
+      const loader = this.$loading.show({
+        loader: 'dots',
+      });
+      let res;
+      try {
+        res = await this.fetchEpisodes(this.rssId);
+      } catch (e) {
+        console.error(e);
+      }
+
+      if (!res) {
+        return;
       }
       this.setCurrEpisodeId(id);
-      if (loader) {
-        loader.hide();
-      }
+
+      loader.hide();
     },
     handleClickPlayBtn() {
       if (this.isCurrEpisodePlaying) {

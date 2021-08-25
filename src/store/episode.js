@@ -1,4 +1,6 @@
-import Vue from 'vue';
+import RssHelper from '@/scripts/RssHelper';
+
+const rss = new RssHelper();
 
 const defaultState = () => ({
   episodes: [],
@@ -56,12 +58,15 @@ export default {
     setCurrEpisodeId(state, episodeId) {
       state.currEpisodeId = episodeId;
     },
+    resetEpisodeState(state) {
+      Object.assign(state, defaultState());
+    },
   },
   actions: {
     async fetchEpisodes({ commit }, rssId) {
       let res;
       try {
-        res = await Vue.prototype.$rss.getRss(rssId);
+        res = await rss.getRss(rssId);
       } catch (error) {
         console.log(error);
       }

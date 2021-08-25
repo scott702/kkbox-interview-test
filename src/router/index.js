@@ -11,11 +11,13 @@ export const routes = [
     path: '/',
     name: ROUTE_NAME.HOME,
     component: Home,
+    props: true,
   },
   {
     path: '/episode/:id',
     name: ROUTE_NAME.EPISODE,
     component: Episode,
+    props: true,
   },
 ];
 

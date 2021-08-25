@@ -72,9 +72,9 @@ export default {
     Button,
   },
   computed: {
-    ...mapState('episode', ['episodes', 'currEpisodeId']),
+    ...mapState('episode', ['episodes']),
     ...mapState('player', ['playerState', 'playingData']),
-    ...mapGetters('episode', ['currEpisode', 'prevNextEpisodeIds']),
+    ...mapGetters('episode', ['prevNextEpisodeIds']),
     audioLink() {
       if (Object.keys(this.playingData).length < 1) {
         return '';

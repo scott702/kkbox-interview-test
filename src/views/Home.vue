@@ -19,6 +19,12 @@ import EpisodeList from '@/components/EpisodeList.vue';
 
 export default {
   name: 'Home',
+  props: {
+    rssId: {
+      type: String,
+      required: true,
+    },
+  },
   components: {
     Header,
     EpisodeList,
@@ -26,12 +32,11 @@ export default {
   data() {
     return {
       channelInfo: {
-        name: '',
+        title: '',
         image: '',
         author: '',
       },
       episodesList: [],
-      isLoading: false,
     };
   },
   mounted() {
@@ -40,21 +45,19 @@ export default {
   methods: {
     ...mapActions('episode', ['fetchEpisodes']),
     async fetchData() {
-      this.isLoading = true;
-      const loader = this.$loading.show({
-        loader: 'dots',
-      });
+      const loader = this.$loading.show({ loader: 'dots' });
       let res;
       try {
-        res = await this.fetchEpisodes('954689a5-3096-43a4-a80b-7810b219cef3');
+        res = await this.fetchEpisodes(this.rssId);
       } catch (err) {
         console.error(err);
       }
+
+      loader.hide();
+
       if (!res) {
         return;
       }
-      this.isLoading = false;
-      loader.hide();
 
       this.channelInfo.title = res.title;
       this.channelInfo.image = res.image.url;
