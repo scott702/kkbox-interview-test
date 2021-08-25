@@ -1,0 +1,46 @@
+@import '@sty/color.scss';
+
+a.btn{
+  user-select: none;
+  text-transform: capitalize;
+  font-size: 1rem;
+  border: 2px solid $text;
+  padding: 4px 8px;
+  box-sizing: border-box;
+  color: $text;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  cursor: pointer;
+
+  &.disabled {
+    cursor: not-allowed;
+  }
+
+
+  &:hover {
+    background-color: $text;
+    border-color: $text;
+    color: $primary;
+  }
+
+  &:active {
+    background-color: $active;
+    border-color: $active;
+  }
+}
+
+a.btn.btn-play {
+  border-radius: 10px;
+  font-size: 1.2rem;
+}
+
+a.btn.btn-play-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

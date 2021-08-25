@@ -1,0 +1,21 @@
+{
+  "include": [
+    "src/**/*.{js,vue}"
+  ],
+  "exclude": [
+    "tests/",
+    "src/*.js",
+    "src/scripts/plugins/*.js"
+  ],
+  "extension": [
+    ".js",
+    ".vue"
+  ],
+  "reporter": [
+    "lcov",
+    "text",
+    "text-summary"
+  ],
+  "all": true,
+  "cached": false
+}

@@ -5,15 +5,30 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "report": "nyc vue-cli-service test:unit",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-regular-svg-icons": "^5.15.4",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/vue-fontawesome": "^2.0.2",
+    "add": "^2.0.6",
+    "ant-design-vue": "^1.7.7",
     "core-js": "^3.6.5",
+    "flush-promises": "^1.0.2",
+    "lodash": "^4.17.21",
+    "null-loader": "^4.0.1",
+    "nyc": "^15.1.0",
+    "rss-parser": "^3.12.0",
+    "sinon": "^11.1.2",
     "vue": "^2.6.11",
+    "vue-loading-overlay": "3.3.2",
     "vue-router": "^3.2.0",
-    "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "yarn": "^1.22.11"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -26,12 +41,14 @@
     "@vue/eslint-config-airbnb": "^5.0.2",
     "@vue/test-utils": "^1.0.3",
     "babel-eslint": "^10.1.0",
+    "babel-plugin-istanbul": "^6.0.0",
     "chai": "^4.1.2",
     "chromedriver": "92",
     "eslint": "^6.7.2",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-vue": "^6.2.2",
     "geckodriver": "^1.20.0",
+    "istanbul-instrumenter-loader": "^3.0.1",
     "node-sass": "^4.12.0",
     "sass-loader": "^8.0.2",
     "vue-template-compiler": "^2.6.11"
