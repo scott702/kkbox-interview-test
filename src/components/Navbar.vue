@@ -65,22 +65,6 @@ export default {
       return breadcrumbs.reverse();
     },
   },
-  methods: {
-    toNextEpisode() {
-      this.$router.push({
-        params: {
-          id: this.prevNextEpisodeIds.next,
-        },
-      });
-    },
-    toPrevEpisode() {
-      this.$router.push({
-        params: {
-          id: this.prevNextEpisodeIds.prev,
-        },
-      });
-    },
-  },
 };
 </script>
 

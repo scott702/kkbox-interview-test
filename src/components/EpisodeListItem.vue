@@ -1,5 +1,5 @@
 <template>
-  <div class="episode-list-item" @click="$emit('click')">
+  <div class="episode-list-item" @click="handleClick">
     <div class="episode-image">
       <img :src="image" alt="episode image" />
     </div>
@@ -42,6 +42,11 @@ export default {
       }
 
       return new Date(this.publishDate).toLocaleDateString();
+    },
+  },
+  methods: {
+    handleClick() {
+      this.$emit('click');
     },
   },
 };

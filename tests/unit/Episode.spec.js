@@ -39,7 +39,6 @@ describe('Episode.vue', () => {
   let vm;
   afterEach(() => {
     sinon.restore();
-    sinon.reset();
   });
 
   it('test mounted', async () => {
@@ -68,15 +67,20 @@ describe('Episode.vue', () => {
 
   it('test click paly btn', async () => {
     vm.handleClickPlayBtn();
-    vm.$store.commit('player/setPlayerStateToPlay', 'hahah');
+    vm.$store.commit('player/setPlayerStateToPlay');
     await vm.$nextTick();
     sinon.assert.match(vm.isCurrEpisodePlaying, true);
     sinon.assert.match(vm.playBtnText, PLAYER_STATE.PAUSE);
 
-    const spyFetch = sinon.spy(vm.$store, 'dispatch');
+    const spyToggle = sinon.spy(vm, 'togglePlayerState');
     vm.handleClickPlayBtn();
     sinon.assert.match(vm.playBtnText, PLAYER_STATE.PLAY);
-    sinon.assert.calledWith(spyFetch);
+    sinon.assert.calledWith(spyToggle);
+    spyToggle.restore();
+
+    vm.handleClickPlayBtn();
+    sinon.assert.match(vm.playBtnText, PLAYER_STATE.PAUSE);
+    sinon.assert.calledWith(spyToggle);
   });
 
   it('test init failed', async () => {

@@ -40,13 +40,14 @@ describe('Home.vue', () => {
     sinon.assert.match(vm.channelInfo.title, FAKE_DATA.title);
     sinon.assert.match(vm.channelInfo.image, FAKE_DATA.image.url);
     sinon.assert.match(vm.channelInfo.author, FAKE_DATA.itunes.author);
-    sinon.assert.match(vm.episodesList, [{
-      title: FAKE_DATA.items[0].title,
-      image: FAKE_DATA.items[0].itunes.image,
-      publishDate: FAKE_DATA.items[0].isoDate,
-      duration: FAKE_DATA.items[0].itunes.duration,
-      id: FAKE_DATA.items[0].guid,
-    }]);
+    const expected = FAKE_DATA.items.map((item) => ({
+      title: item.title,
+      image: item.itunes.image,
+      publishDate: item.isoDate,
+      duration: item.itunes.duration,
+      id: item.guid,
+    }));
+    sinon.assert.match(vm.episodesList, expected);
     stubShow.reset();
     stubHide.reset();
   });

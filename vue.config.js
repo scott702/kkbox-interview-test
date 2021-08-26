@@ -20,6 +20,9 @@ module.exports = {
     // custom alias
     config.resolve.alias
       .set('@sty', path.resolve(__dirname, 'src/assets/styles'))
-      .set('@widget', path.resolve(__dirname, 'src/components/widget'));
+      .set('@widget', path.resolve(__dirname, 'src/components/widget'))
+
+      // For fixing ant-design-vue bug
+      .set('indexof', 'component-indexof/index');
   },
 };

@@ -10,9 +10,6 @@ export default {
   namespaced: true,
   state: defaultState(),
   mutations: {
-    setPlayerState(state, playerState) {
-      state.playerState = playerState;
-    },
     setPlayerStateToPlay(state) {
       state.playerState = PLAYER_STATE.PLAY;
     },

@@ -59,10 +59,7 @@
 </template>
 
 <script>
-import {
-  mapGetters, mapState, mapActions, mapMutations,
-} from 'vuex';
-import colors from '@sty/color.scss';
+import { mapState, mapActions, mapMutations } from 'vuex';
 import Button from '@widget/Button.vue';
 import { PLAYER_STATE, ROUTE_NAME } from '@/scripts/constants';
 
@@ -74,7 +71,6 @@ export default {
   computed: {
     ...mapState('episode', ['episodes']),
     ...mapState('player', ['playerState', 'playingData']),
-    ...mapGetters('episode', ['prevNextEpisodeIds']),
     audioLink() {
       if (Object.keys(this.playingData).length < 1) {
         return '';
@@ -102,16 +98,7 @@ export default {
       PLAYER_STATE,
       ROUTE_NAME,
       seekValue: 0,
-      isBuffered: true,
       isLoading: false,
-      seekbarSty: {
-        process: {
-          background: colors.highlightColor,
-        },
-        dot: {
-          background: colors.highlightColor,
-        },
-      },
     };
   },
   watch: {
@@ -157,7 +144,7 @@ export default {
       }
     },
     onLoadeddata() {
-      this.setPlayerStateToPlay();
+      this.onPlay();
     },
     onAudioTimeUpdate(e) {
       this.seekValue = e.target.currentTime;
@@ -165,7 +152,7 @@ export default {
     onAudioProgress() {
       const isBuffered = this.checkBuffered();
       const isPasued = this.$refs.audio.paused;
-      if ((isPasued && isBuffered) || this.$refs.audio.buffered.length === 0) {
+      if (isPasued && isBuffered) {
         this.$set(this, 'isLoading', false);
         this.setPlayerStateToPlay();
       }
@@ -201,24 +188,14 @@ export default {
         this.handlePauseAudio();
       }
     },
-    checkAudioLoeded() {
-      if (this.$refs.audio.readyState !== 4) {
-        this.$refs.audio.load();
-        return false;
-      }
-
-      return true;
-    },
     onAudioEnd() {
       this.handlePlayToNext();
     },
     handlePlayToNext() {
-      const { next } = this.prevNextEpisodeIds;
-
-      if (next) {
+      const epIdx = this.episodes.findIndex((ep) => ep.guid === this.playingData.guid);
+      if (epIdx > 0) {
         this.resetPlayerState();
-        const episode = this.episodes.find((ep) => ep.guid === next);
-        this.setPlayingData(episode);
+        this.setPlayingData(this.episodes[epIdx - 1]);
         return;
       }
       this.setPlayingData({});

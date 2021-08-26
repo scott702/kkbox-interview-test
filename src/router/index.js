@@ -4,7 +4,9 @@ import Home from '@/views/Home.vue';
 import Episode from '@/views/Episode.vue';
 import { ROUTE_NAME } from '@/scripts/constants';
 
-Vue.use(VueRouter);
+if (process.env.NODE_ENV !== 'test') {
+  Vue.use(VueRouter);
+}
 
 export const routes = [
   {
