@@ -1,15 +1,9 @@
-/* eslint-disable prefer-const */
-/* eslint-disable no-unused-vars */
 import sinon from 'sinon';
 import { shallowMount } from '@vue/test-utils';
-import flushPromise from 'flush-promises';
 import EpisodePlayer from '@/components/EpisodePlayer.vue';
 import initLocalVue from './LocalVue';
 import { PLAYER_STATE, ROUTE_NAME } from '@/scripts/constants';
-import RssHelper from '@/scripts/RssHelper';
-import {
-  FAKE_ID, FAKE_EPISODE_ID, FAKE_DATA,
-} from './FakeData';
+import { FAKE_DATA } from './FakeData';
 
 describe('EpisodePlayer.vue', () => {
   const stubPush = sinon.stub();
@@ -138,41 +132,46 @@ describe('EpisodePlayer.vue', () => {
 
   it('<audio> pause event triggered', async () => {
     const stub = sinon.stub(vm, 'setPlayerStateToPause');
-    vm.onPause();
+    const el = wrapper.find('audio');
+    el.trigger('pause');
     await vm.$nextTick();
     sinon.assert.notCalled(stub);
 
     fakeAudio.buffered.length = 1;
-    vm.onPause();
+    el.trigger('pause');
     await vm.$nextTick();
     sinon.assert.calledWith(stub);
   });
 
   it('<audio> play event triggered', () => {
     const stub = sinon.stub(vm, 'setPlayerStateToPlay');
+    const el = wrapper.find('audio');
+
     vm.isLoading = true;
-    vm.onPlay();
+    el.trigger('play');
     sinon.assert.calledWith(stub);
     sinon.assert.match(vm.isLoading, false);
   });
 
   it('<audio> loadeddata event triggered', () => {
     const stub = sinon.stub(vm, 'onPlay');
-    vm.onLoadeddata();
+    const el = wrapper.find('audio');
+    el.trigger('loadeddata');
     sinon.assert.calledWith(stub);
   });
 
   it('<audio> progress event triggered', () => {
+    const el = wrapper.find('audio');
     vm.isLoading = true;
     const stubCheck = sinon.stub(vm, 'checkBuffered');
     const stubSetPlayer = sinon.stub(vm, 'setPlayerStateToPlay');
     stubCheck.returns(false);
-    vm.onAudioProgress();
+    el.trigger('progress');
     sinon.assert.match(vm.isLoading, true);
     sinon.assert.notCalled(stubSetPlayer);
 
     stubCheck.returns(true);
-    vm.onAudioProgress();
+    el.trigger('progress');
     sinon.assert.match(vm.isLoading, false);
     sinon.assert.calledWith(stubSetPlayer);
   });
@@ -212,7 +211,8 @@ describe('EpisodePlayer.vue', () => {
     test(30);
   });
   it('<audio> suspended event triggered', () => {
-    vm.onSuspended();
+    const el = wrapper.find('audio');
+    el.trigger('suspended');
     sinon.assert.match(vm.isLoading, true);
   });
 
